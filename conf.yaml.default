@@ -1,0 +1,11 @@
+streams: 
+  - name: brett-kollman
+    url: https://www.youtube.com/feeds/videos.xml?channel_id=UCYzfVBuCfGz-oF3aOCGgO5g
+    channel: sports
+  - name: filmselect-trailer
+    url: https://www.youtube.com/feeds/videos.xml?channel_id=UCT0hbLDa-unWsnZ6Rjzkfug
+    channel: movies
+    exclude: (?i)(NEW MOVIE TRAILERS|TOP UPCOMING MOVIES))
+  - name: dunkey
+    url: https://www.youtube.com/feeds/videos.xml?channel_id=UCsvn_Po0SmunchJYOWpOxMg
+    channel: gaming
