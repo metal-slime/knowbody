@@ -64,20 +64,18 @@ func Start() {
 	}
 }
 
+func Lint() {
+	readYamlIntoConfig("conf.yaml", &CurrentConfig)
+	readYamlIntoConfig("knowbody.lock", &State)
+}
+
 func ReadConfig() {
 	err := DownloadFile("conf.yaml", "https://raw.githubusercontent.com/jeefy/knowbody/master/conf.yaml")
 	if err != nil {
 		log.Printf("Error downloading updated config from Github: %s", err.Error())
 	}
 
-	yamlFile, err := ioutil.ReadFile("conf.yaml")
-	if err != nil {
-		log.Printf("yamlFile.Get err   #%v ", err)
-	}
-	err = yaml.Unmarshal(yamlFile, &CurrentConfig)
-	if err != nil {
-		log.Fatalf("Unmarshal: %v", err)
-	}
+	readYamlIntoConfig("conf.yaml", &CurrentConfig)
 
 	for key, stream := range CurrentConfig.Streams {
 		comp, err := regexp.Compile(stream.Include)
@@ -140,4 +138,15 @@ func DownloadFile(filepath string, url string) error {
 	// Write the body to file
 	_, err = io.Copy(out, resp.Body)
 	return err
+}
+
+func readYamlIntoConfig(file string, obj interface{}) {
+	yamlFile, err := ioutil.ReadFile(file)
+	if err != nil {
+		log.Printf("yamlFile.Get err   #%v ", err)
+	}
+	err = yaml.Unmarshal(yamlFile, obj)
+	if err != nil {
+		log.Fatalf("Unmarshal: %v", err)
+	}
 }

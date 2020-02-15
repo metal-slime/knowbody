@@ -6,6 +6,7 @@ export $(shell sed 's/=.*//' .env)
 
 check: 
 	golangci-lint run -c .golang-ci.yml ./... 
+	go run cmd/main.go --lint
 
 test:
 	go test -v ./...
