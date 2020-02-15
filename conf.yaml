@@ -9,3 +9,17 @@ streams:
   - name: dunkey
     url: https://www.youtube.com/feeds/videos.xml?channel_id=UCsvn_Po0SmunchJYOWpOxMg
     channel: gaming
+  - name: puffin-forest
+    url: https://www.youtube.com/feeds/videos.xml?channel_id=UCUpkp-6fXuG9dqfoJ99XTmw
+    channel: d20
+  - name: gus-johnson
+    url: https://www.youtube.com/feeds/videos.xml?channel_id=UCpIafFPGutTAKOBHMtGen7g
+    channel: general
+  - name: binging-with-babish
+    url: https://www.youtube.com/feeds/videos.xml?channel_id=UCJHA_jMfCvEnv-3kRjTCQXw
+    channel: thefats
+    include: "Binging with Babish\:"
+  - name: rapsheet-local
+    url: http://twitrss.me/twitter_user_to_rss/?user=rapsheet
+    channel: sports
+    include: "(Green Bay|Detroit|Minnesota|Minneapolis|Madison|Michigan|Lions|Vikings|Packers)"
