@@ -43,6 +43,7 @@ type CurrentState struct {
 func (stream *ContentStream) Process() {
 	fp := gofeed.NewParser()
 	feed, _ := fp.ParseURL(stream.Url)
+
 	log.Printf("Looping through feed from %s", stream.Url)
 	for i := len(feed.Items) - 1; i >= 0; i-- {
 		item := feed.Items[i]

@@ -29,6 +29,12 @@ func Start() {
 	// Recover state from previous run
 	ReadState()
 
+	// Assume if LastRun is over a year old to not bother and just set it to now
+	// Prevents spamming
+	if State.LastRun.Before(time.Now().AddDate(-1, 0, 0)) {
+		State.LastRun = time.Now()
+	}
+
 	for {
 		// Allow config changes between runs
 		ReadConfig()
