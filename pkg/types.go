@@ -21,6 +21,7 @@ type ContentStream struct {
 	Channel string `yaml:"channel"` // slack channel in the workspace
 	Exclude string `yaml:"exclude"` // regex of content to exclude from this source cannot be set with include.
 	Include string `yaml:"include"` // regex of content to include from this source. cannot be set with exclude.
+	Spoiler bool   `yaml:"spoiler"` // boolean to indicate if it should post in a thread instead of in channel.
 
 	excludeRegex *regexp.Regexp
 	includeRegex *regexp.Regexp
@@ -71,7 +72,15 @@ func (stream *ContentStream) Process() {
 				if _, ok := State.Channels[stream.Channel]; !ok {
 					log.Printf("Channel '%s' does not exist on slack server.", stream.Channel)
 				} else {
-					State.slackClient.PostMessage(State.Channels[stream.Channel], slack.MsgOptionText(item.Link, false))
+					if stream.Spoiler == true {
+						_, ts, post_err := State.slackClient.PostMessage(State.Channels[stream.Channel], slack.MsgOptionText(item.Title, false))
+						if post_err != nil {
+							log.Printf("Error posting to spoiler reply thread in: %s", post_err.Error())
+						}
+						State.slackClient.PostMessage(State.Channels[stream.Channel], slack.MsgOptionText(item.Link, false), slack.MsgOptionTS(ts))
+					} else {
+						State.slackClient.PostMessage(State.Channels[stream.Channel], slack.MsgOptionText(item.Link, false))
+					}
 				}
 			}
 			state := State.Streams[streamName]
