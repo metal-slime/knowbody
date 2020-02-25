@@ -1,8 +1,8 @@
 streams: 
   - name: lawsites
     url: https://www.lawsitesblog.com/feed/
-    channel: articles
+    channel: live-news
   - name: rapsheet-local
     url: http://twitrss.me/twitter_user_to_rss/?user=BLaw
-    channel: articles
+    channel: live-news
     include: "(Reynen Court|legal technology|LegalTech|LegalOps)"
