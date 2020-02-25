@@ -6,3 +6,6 @@ streams:
     url: http://twitrss.me/twitter_user_to_rss/?user=BLaw
     channel: live-news
     include: "(Reynen Court|legal technology|LegalTech|LegalOps)"
+  - name: artificial-lawyer
+    url: https://www.artificiallawyer.com/feed
+    channel: live-news
