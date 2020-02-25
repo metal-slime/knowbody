@@ -70,7 +70,7 @@ func Lint() {
 }
 
 func ReadConfig() {
-	err := DownloadFile("conf.yaml", "https://raw.githubusercontent.com/jeefy/knowbody/master/conf.yaml")
+	err := DownloadFile("conf.yaml", "https://raw.githubusercontent.com/metal-slime/knowbody/master/conf.yaml")
 	if err != nil {
 		log.Printf("Error downloading updated config from Github: %s", err.Error())
 	}
