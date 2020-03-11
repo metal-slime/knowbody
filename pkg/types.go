@@ -46,47 +46,49 @@ func (stream *ContentStream) Process() {
 	feed, _ := fp.ParseURL(stream.Url)
 
 	log.Printf("Looping through feed from %s", stream.Url)
-	for i := len(feed.Items) - 1; i >= 0; i-- {
-		item := feed.Items[i]
+	if feed != nil {
+		for i := len(feed.Items) - 1; i >= 0; i-- {
+			item := feed.Items[i]
 
-		streamName := stream.Name
-		_, ok := State.Streams[streamName]
-		if !ok {
-			State.Streams[streamName] = ContentState{
-				Stream:  *stream,
-				RSSId:   "0",
-				RSSTime: State.LastRun,
-			}
-		}
-
-		parsedDate, err := dateparse.ParseAny(item.Published)
-		if err != nil {
-			log.Fatalf("Error parsing date: %s", err.Error())
-		}
-
-		if parsedDate.After(State.Streams[streamName].RSSTime) {
-			log.Printf("Checking %s", item.Title)
-			if (stream.Exclude == "" && stream.Include == "") || (stream.Exclude != "" && !stream.excludeRegex.Match([]byte(item.Title))) || (stream.Include != "" && stream.includeRegex.Match([]byte(item.Title))) {
-				log.Printf("Posting %s: %s to %s", item.Title, item.Link, stream.Channel)
-
-				if _, ok := State.Channels[stream.Channel]; !ok {
-					log.Printf("Channel '%s' does not exist on slack server.", stream.Channel)
-				} else {
-					if stream.Spoiler == true {
-						_, ts, post_err := State.slackClient.PostMessage(State.Channels[stream.Channel], slack.MsgOptionText(item.Title, false))
-						if post_err != nil {
-							log.Printf("Error posting to spoiler reply thread in: %s", post_err.Error())
-						}
-						State.slackClient.PostMessage(State.Channels[stream.Channel], slack.MsgOptionText(item.Link, false), slack.MsgOptionTS(ts))
-					} else {
-						State.slackClient.PostMessage(State.Channels[stream.Channel], slack.MsgOptionText(item.Link, false))
-					}
+			streamName := stream.Name
+			_, ok := State.Streams[streamName]
+			if !ok {
+				State.Streams[streamName] = ContentState{
+					Stream:  *stream,
+					RSSId:   "0",
+					RSSTime: State.LastRun,
 				}
 			}
-			state := State.Streams[streamName]
-			state.RSSId = item.GUID
-			state.RSSTime = parsedDate
-			State.Streams[streamName] = state
+
+			parsedDate, err := dateparse.ParseAny(item.Published)
+			if err != nil {
+				log.Fatalf("Error parsing date: %s", err.Error())
+			}
+
+			if parsedDate.After(State.Streams[streamName].RSSTime) {
+				log.Printf("Checking %s", item.Title)
+				if (stream.Exclude == "" && stream.Include == "") || (stream.Exclude != "" && !stream.excludeRegex.Match([]byte(item.Title))) || (stream.Include != "" && stream.includeRegex.Match([]byte(item.Title))) {
+					log.Printf("Posting %s: %s to %s", item.Title, item.Link, stream.Channel)
+
+					if _, ok := State.Channels[stream.Channel]; !ok {
+						log.Printf("Channel '%s' does not exist on slack server.", stream.Channel)
+					} else {
+						if stream.Spoiler == true {
+							_, ts, post_err := State.slackClient.PostMessage(State.Channels[stream.Channel], slack.MsgOptionText(item.Title, false))
+							if post_err != nil {
+								log.Printf("Error posting to spoiler reply thread in: %s", post_err.Error())
+							}
+							State.slackClient.PostMessage(State.Channels[stream.Channel], slack.MsgOptionText(item.Link, false), slack.MsgOptionTS(ts))
+						} else {
+							State.slackClient.PostMessage(State.Channels[stream.Channel], slack.MsgOptionText(item.Link, false))
+						}
+					}
+				}
+				state := State.Streams[streamName]
+				state.RSSId = item.GUID
+				state.RSSTime = parsedDate
+				State.Streams[streamName] = state
+			}
 		}
 	}
 }
